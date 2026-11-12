@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sans Filtre — Le test des youtubeurs : questions argent, vie perso, YouTube</title>
+<meta name="description" content="Sans Filtre, le test à faire en vidéo : des questions cash à poser à un youtubeur sur l'argent, la vie perso et les coulisses de YouTube. Jokers, défis, classement des youtubeurs les plus cash.">
+<meta property="og:title" content="Sans Filtre — Le test des youtubeurs">
+<meta property="og:description" content="Réponds aux questions les plus cash, garde tes jokers et compare-toi aux autres créateurs.">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#120d12; --card:#1d151d; --txt:#f6eef4; --mute:#a593a0; --hot:#ff3d6e; --gold:#ffd23d; --line:#33263a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:Inter,system-ui,sans-serif; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:20px 16px 40px; }
+  .logo { font-family:'Archivo Black',sans-serif; font-size:clamp(1.6rem,5vw,2.4rem); letter-spacing:-1px; line-height:1; }
+  .logo span { color:var(--hot); }
+  .wrap { width:100%; max-width:900px; }
+  .screen { display:none; width:100%; max-width:900px; }
+  .screen.on { display:block; }
+  .top { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .stats { color:var(--mute); font-size:.85rem; text-align:right; }
+  .jk { font:800 1rem Inter,sans-serif; color:var(--gold); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:24px; padding:clamp(28px,6vw,64px) clamp(20px,5vw,56px); text-align:center; position:relative; overflow:hidden; margin:20px 0; }
+  .num { color:var(--hot); font:800 .8rem Inter,sans-serif; letter-spacing:3px; text-transform:uppercase; margin-bottom:18px; }
+  .q { font-weight:800; font-size:clamp(1.6rem,5.2vw,3.2rem); line-height:1.2; }
+  .qstat { color:var(--mute); margin-top:18px; font-size:.95rem; min-height:1.2em; }
+  .reward { display:none; margin-top:14px; color:var(--gold); font:800 .95rem Inter,sans-serif; letter-spacing:1px; }
+  .reward.show { display:block; }
+  .pop { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font:800 clamp(2rem,8vw,4.5rem) 'Archivo Black',sans-serif; color:var(--gold); background:rgba(18,13,18,.9); opacity:0; pointer-events:none; transition:opacity .25s; }
+  .pop.show { opacity:1; }
+  .btns { display:flex; gap:10px; flex-wrap:wrap; }
+  .btn { flex:1; min-width:120px; padding:16px; border-radius:14px; border:none; font:700 1rem Inter,sans-serif; cursor:pointer; }
+  .main { background:var(--hot); color:#fff; flex:2; }
+  .ghost { background:transparent; color:var(--txt); border:1px solid var(--line); }
+  .gold { background:var(--gold); color:#1a1300; display:none; }
+  .gold.show { display:block; }
+  .btn:disabled { opacity:.35; cursor:not-allowed; }
+  .hint { color:var(--mute); font-size:.75rem; margin-top:14px; text-align:center; line-height:1.5; }
+  /* Accueil */
+  .intro { color:var(--mute); margin:10px 0 24px; line-height:1.5; }
+  .form { display:grid; gap:14px; }
+  label { font-weight:600; font-size:.9rem; display:block; margin-bottom:6px; }
+  input, select { width:100%; background:var(--card); border:1px solid var(--line); color:var(--txt); border-radius:12px; padding:14px; font:600 1rem Inter,sans-serif; }
+  input:focus, select:focus { outline:2px solid var(--hot); border-color:transparent; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  h2 { font-family:'Archivo Black',sans-serif; font-size:1.3rem; margin:32px 0 12px; }
+  .board { list-style:none; display:grid; gap:8px; }
+  .board li { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; display:flex; gap:12px; align-items:center; }
+  .board .rk { font:800 1.1rem Inter,sans-serif; color:var(--hot); width:28px; }
+  .board .nm { flex:1; font-weight:700; }
+  .board .tt { color:var(--mute); font-size:.8rem; font-weight:400; }
+  .board .pc { font:800 1.1rem Inter,sans-serif; }
+  .empty { color:var(--mute); font-size:.9rem; }
+  .note { color:var(--mute); font-size:.8rem; margin-top:10px; }
+  /* Fin */
+  .end { display:grid; grid-template-columns:minmax(0,360px) 1fr; gap:28px; align-items:start; margin-top:20px; }
+  @media (max-width:720px) { .end { grid-template-columns:1fr; } .row { grid-template-columns:1fr; } }
+  canvas { width:100%; height:auto; border-radius:18px; border:1px solid var(--line); display:block; }
+  .facts { display:grid; gap:10px; }
+  .fact { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+  .fact b { display:block; font-size:1.4rem; }
+  .fact span { color:var(--mute); font-size:.85rem; }
+  .saved { font-size:.85rem; color:var(--mute); }
+  .saved.ok { color:#5fd38d; }
+</style>
+</head>
+<body>
+
+<!-- ACCUEIL -->
+<div class="screen on" id="s-home">
+  <div class="logo">SANS <span>FILTRE</span></div>
+  <p class="intro">Le test des youtubeurs : argent, vie perso, coulisses de YouTube. Réponds, utilise tes jokers, et compare-toi aux autres créateurs.</p>
+  <div class="form">
+    <div>
+      <label for="pseudo">Nom de ta chaîne</label>
+      <input id="pseudo" maxlength="30" placeholder="Ex : MaChaîne">
+    </div>
+    <div class="row">
+      <div>
+        <label for="abos">Abonnés</label>
+        <select id="abos">
+          <option>Moins de 10k</option>
+          <option>10k à 100k</option>
+          <option>100k à 1M</option>
+          <option>Plus de 1M</option>
+        </select>
+      </div>
+      <div>
+        <label for="len">Longueur de la partie</label>
+        <select id="len">
+          <option value="10">10 questions</option>
+          <option value="20" selected>20 questions</option>
+          <option value="30">30 questions</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn main" id="start">Commencer la partie</button>
+  </div>
+  <h2>🏆 Les plus cash</h2>
+  <ul class="board" id="board"><li class="empty">Chargement du classement…</li></ul>
+  <p class="note" id="dbnote"></p>
+</div>
+
+<!-- PARTIE -->
+<div class="screen" id="s-game">
+  <div class="top">
+    <div class="logo">SANS <span>FILTRE</span></div>
+    <div class="stats"><div class="jk" id="jk"></div><div id="stats"></div></div>
+  </div>
+  <div class="card">
+    <div class="num" id="num"></div>
+    <div class="q" id="q"></div>
+    <div class="qstat" id="qstat"></div>
+    <div class="reward" id="reward">🃏 DÉFI : FAIS-LE ET GAGNE UN JOKER</div>
+    <div class="pop" id="pop"></div>
+  </div>
+  <div class="btns">
+    <button class="btn ghost" id="pass">Utiliser un joker</button>
+    <button class="btn gold" id="done">Fait ! +1 joker</button>
+    <button class="btn main" id="next">Question suivante</button>
+  </div>
+  <p class="hint">3 jokers au départ. Un joker permet de passer une question. 2 défis par partie : réussis-les pour gagner un joker. Sans joker, il faut répondre.<br>Espace = question suivante · D = défi réussi · J = utiliser un joker</p>
+</div>
+
+<!-- FIN -->
+<div class="screen" id="s-end">
+  <div class="logo">SANS <span>FILTRE</span></div>
+  <div class="end">
+    <div>
+      <canvas id="cv" width="1080" height="1920"></canvas>
+    </div>
+    <div class="facts">
+      <div class="fact"><b id="f-titre"></b><span>Ton titre</span></div>
+      <div class="fact"><b id="f-taux"></b><span>de franchise</span></div>
+      <div class="fact"><b id="f-compare"></b><span>Comparé aux autres youtubeurs</span></div>
+      <p class="saved" id="saved"></p>
+      <div class="btns">
+        <button class="btn main" id="dl">Partager / télécharger l'image</button>
+        <button class="btn ghost" id="again">Rejouer</button>
+      </div>
+      <p class="note" id="dlnote">Format story (1080 × 1920), prêt pour TikTok, Shorts ou Insta.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const SLOTS = {
+  somme: ["1 000 €", "10 000 €", "100 000 €", "un million"],
+  note: ["sur 10", "sur 20"]
+};
+const QUESTIONS = [
+  // Argent
+  ["Tu gagnes combien par mois ?", "Ton salaire YouTube ?", "YouTube te rapporte combien ?"],
+  ["Ta vidéo la plus rentable ?", "Ta meilleure vidéo t'a rapporté combien ?", "Ton plus gros chèque ?"],
+  ["Un placement, tu le factures combien ?", "Ton plus gros sponsor ?", "Ton meilleur contrat ?"],
+  ["Déjà vendu un produit nul ?", "Un sponsor que tu détestais ?", "Déjà fait la promo d'un truc pourri ?"],
+  ["Déjà acheté des abonnés ?", "Des fausses vues, déjà ?", "Tu as déjà triché sur tes stats ?"],
+  ["Ton achat le plus inutile ?", "Ton pire achat ?", "Ta plus grosse dépense ?"],
+  ["Combien sur ton compte ?", "Ton solde, là, maintenant ?", "Tu as combien en banque ?"],
+  ["Déjà menti sur tes revenus ?", "Tu fais croire que tu es riche ?", "Ton train de vie, il est vrai ?"],
+  ["Pour {somme}, tu supprimes ta chaîne ?", "{somme} pour arrêter YouTube : oui ou non ?", "Ton prix pour quitter YouTube ?"],
+  ["Déjà refusé un gros contrat ?", "Un sponsor que tu as refusé ?", "Déjà dit non à {somme} ?"],
+  ["Ton premier salaire YouTube ?", "Ta première paye, c'était combien ?", "Ton premier euro gagné en ligne ?"],
+  ["Tu payes combien de loyer ?", "Propriétaire ou locataire ?", "Ta maison, elle coûte combien ?"],
+  ["Ta voiture coûte combien ?", "Ton plus gros achat cette année ?", "Ta montre la plus chère ?"],
+  ["Tu investis ton argent ?", "Crypto, bourse ou livret A ?", "Déjà perdu de l'argent en investissant ?"],
+  ["Déjà été fauché ?", "Ta pire galère d'argent ?", "Déjà été à découvert ?"],
+  ["Tu aides ta famille financièrement ?", "Tu as déjà offert un gros cadeau à tes parents ?", "Ton plus beau cadeau offert ?"],
+  ["Tu prêtes de l'argent à tes potes ?", "On t'a déjà pas remboursé ?", "Qui te doit de l'argent ?"],
+  ["Pour {somme}, tu te rases la tête ?", "Pour {somme}, tu lis tes DM en live ?", "Pour {somme}, tu postes une photo de toi bébé ?"],
+  ["Tu gagnes plus que tes parents ?", "Tes parents savent combien tu gagnes ?", "Tu gagnes plus qu'un médecin ?"],
+  ["Tu dépenses combien par mois ?", "Ton budget restaurant ?", "Ta dépense la plus bête ce mois-ci ?"],
+  // Vie perso
+  ["Tu fais quoi le matin en premier ?", "Tu te lèves à quelle heure ?", "Ta routine du matin ?"],
+  ["Tu as fait des études ?", "Ton pire souvenir d'école ?", "Tu étais bon élève ?"],
+  ["Ton job avant YouTube ?", "Tu faisais quoi avant ?", "Ton pire petit boulot ?"],
+  ["Tes parents pensent quoi de YouTube ?", "Tes parents regardent tes vidéos ?", "Tes parents étaient contre au début ?"],
+  ["Ton pire mensonge à tes parents ?", "Un secret pour tes parents ?", "Tes parents ne savent pas que… ?"],
+  ["Un secret pour tes abonnés ?", "Ce que ta commu ne sait pas ?", "Un truc que tu caches en vidéo ?"],
+  ["En couple ?", "Célibataire ou pas ?", "Ton statut amoureux ?"],
+  ["Ton pire râteau ?", "Ton râteau le plus gênant ?", "Déjà pris un gros vent ?"],
+  ["Ta plus grosse peur ?", "Tu as peur de quoi ?", "Ta phobie ?"],
+  ["Ton plus grand regret ?", "Un truc que tu referais autrement ?", "Une décision que tu regrettes ?"],
+  ["Tu as pleuré quand pour la dernière fois ?", "La dernière fois que tu as craqué ?", "Qu'est-ce qui te fait pleurer ?"],
+  ["Ton meilleur pote ?", "Qui est vraiment là pour toi ?", "Ton ami le plus ancien ?"],
+  ["Tu t'es déjà embrouillé avec un pote ?", "Une amitié perdue ?", "Un pote que tu as perdu à cause de YouTube ?"],
+  ["Tu dors combien d'heures ?", "Tu te couches à quelle heure ?", "Insomniaque ?"],
+  ["Ton plat préféré ?", "Tu sais cuisiner ?", "Ton fast-food préféré ?"],
+  ["Dans 10 ans, tu fais quoi ?", "Tu te vois où dans 10 ans ?", "Ton rêve ?"],
+  ["Ton pire défaut ?", "Ta plus grande qualité ?", "On te reproche quoi souvent ?"],
+  ["Tu as déjà fait de la thérapie ?", "Tu gères comment le stress ?", "Tu as déjà fait un burn-out ?"],
+  ["Ta pire honte ?", "Ton moment le plus gênant ?", "Le jour où tu as eu le plus honte ?"],
+  ["Ton péché mignon ?", "Ta mauvaise habitude ?", "Tu es accro à quoi ?"],
+  // Milieu YouTube
+  ["Un youtubeur que tu détestes ?", "Qui tu ne supportes pas dans le milieu ?", "Ton pire ennemi sur YouTube ?"],
+  ["Une collab juste pour les vues ?", "Ta collab la plus fake ?", "Une collab que tu regrettes ?"],
+  ["Le youtubeur le plus faux ?", "Qui est différent hors caméra ?", "Le plus hypocrite du milieu ?"],
+  ["Jaloux d'un autre youtubeur ?", "Qui te rend jaloux ?", "La réussite de qui t'énerve ?"],
+  ["Le pire message d'un abonné ?", "Ton DM le plus bizarre ?", "Un abonné t'a déjà fait peur ?"],
+  ["La vidéo que tu regrettes ?", "Une vidéo à supprimer ?", "Ta vidéo la plus gênante ?"],
+  ["Une vidéo fake ?", "Déjà mis en scène un truc ?", "Tout est vrai dans tes vidéos ?"],
+  ["Le pire commentaire reçu ?", "Un hater t'a déjà touché ?", "Tu lis les commentaires méchants ?"],
+  ["Déjà voulu tout arrêter ?", "Tu as failli quitter YouTube ?", "Qu'est-ce qui te ferait arrêter ?"],
+  ["Ton youtubeur préféré ?", "Qui t'a donné envie de commencer ?", "Ton modèle sur YouTube ?"],
+  ["Le youtubeur le plus riche que tu connais ?", "Qui gagne le plus dans ta bande ?", "Le plus radin du milieu ?"],
+  ["Tu mets combien de temps par vidéo ?", "Tu bosses combien d'heures par semaine ?", "Tu as une équipe ?"],
+  ["On te reconnaît dans la rue ?", "Ta rencontre de fan la plus bizarre ?", "La célébrité, ça te saoule ?"],
+  ["Note ta chaîne {note}.", "Ta pire vidéo, {note} ?", "Note ton dernier invité {note}."],
+  // Défis (les 10 derniers rapportent un joker)
+  ["Montre ta dernière photo.", "Montre une photo au hasard de ta galerie.", "Montre ta dernière capture d'écran."],
+  ["Lis ton dernier message.", "Lis ton dernier message reçu.", "Lis ton dernier message envoyé."],
+  ["Montre ta dernière recherche Google.", "Montre ton historique YouTube.", "Montre tes dernières recherches."],
+  ["Montre ton appli bancaire, juste le solde.", "Montre ton dernier achat en ligne.", "Montre tes stats YouTube du mois."],
+  ["Montre ton fond d'écran.", "Montre tes applis les plus utilisées.", "Montre ton temps d'écran."],
+  ["Imite un youtubeur.", "Imite ta mère énervée.", "Imite ton prof préféré."],
+  ["Appelle un pote et dis-lui « je t'aime ».", "Envoie un vocal à ta mère.", "Appelle ton dernier contact en haut-parleur."],
+  ["Ton surnom le plus gênant ?", "Le surnom de ta famille ?", "Un surnom que tu détestes ?"],
+  ["Chante 10 secondes.", "Fais ton meilleur pas de danse.", "Fais ton cri de guerre."],
+  ["Lis ton dernier message de ta mère.", "Montre ton groupe de famille.", "Lis le dernier message de ton meilleur pote."]
+];
+
+
+function phrase(variants) {
+  const v = variants[Math.floor(Math.random() * variants.length)];
+  return v.replace(/\{(\w+)\}/g, (_, k) => SLOTS[k] ? SLOTS[k][Math.floor(Math.random() * SLOTS[k].length)] : _);
+}
+
+const $ = id => document.getElementById(id);
+const DEFIS = new Set(Array.from({length:10}, (_, i) => QUESTIONS.length - 10 + i));
+
+// ---------- CONFIGURATION FIREBASE ----------
+// Colle ici la configuration de ton projet Firebase (voir GUIDE.md, étape 2).
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBsnDIxMoDPV5pPwAVivvf8JDsDJXWEz5I",
+  authDomain: "question-ur.firebaseapp.com",
+  projectId: "question-ur",
+  storageBucket: "question-ur.firebasestorage.app",
+  messagingSenderId: "167983872677",
+  appId: "1:167983872677:web:90d6ba56dd96b74527eb4c"
+};
+const SDK = "https://www.gstatic.com/firebasejs/10.12.2/";
+
+// ---------- Données partagées (parties de tous les youtubeurs) ----------
+let db = null, fb = null, allGames = [];
+
+function cleanGame(g) {
+  // Les données partagées ne sont pas fiables : on vérifie chaque champ.
+  if (!g || typeof g !== 'object') return null;
+  const num = (x, max) => (typeof x === 'number' && isFinite(x)) ? Math.max(0, Math.min(max, x)) : 0;
+  const answers = {};
+  if (g.answers && typeof g.answers === 'object') {
+    for (const [k, v] of Object.entries(g.answers)) {
+      const i = Number(k);
+      if (Number.isInteger(i) && i >= 0 && i < QUESTIONS.length && ['r','p','ok','ko'].includes(v)) answers[i] = v;
+    }
+  }
+  return {
+    pseudo: String(g.pseudo || 'Anonyme').slice(0, 30),
+    abonnes: String(g.abonnes || '').slice(0, 20),
+    titre: String(g.titre || '').slice(0, 40),
+    taux: num(g.taux, 100),
+    answers
+  };
+}
+
+async function initDb() {
+  if (FIREBASE_CONFIG.apiKey.startsWith('COLLE')) {
+    $('board').innerHTML = '<li class="empty">Statistiques pas encore branchées (configuration Firebase manquante).</li>';
+    return;
+  }
+  try {
+    const app = await import(SDK + 'firebase-app.js');
+    fb = await import(SDK + 'firebase-firestore.js');
+    db = fb.getFirestore(app.initializeApp(FIREBASE_CONFIG));
+  } catch (e) {
+    db = null;
+    $('board').innerHTML = '<li class="empty">Classement indisponible pour le moment.</li>';
+    return;
+  }
+  // Mise à jour en direct : chaque nouvelle partie met à jour le classement et les stats sur tous les écrans.
+  const q = fb.query(fb.collection(db, 'parties'), fb.orderBy('date', 'desc'), fb.limit(2000));
+  fb.onSnapshot(q, snap => {
+    allGames = snap.docs.map(d => cleanGame(d.data())).filter(Boolean);
+    renderBoard();
+  }, () => { $('board').innerHTML = '<li class="empty">Impossible de charger le classement.</li>'; });
+}
+
+function renderBoard() {
+  const best = {};
+  allGames.forEach(g => {
+    const k = g.pseudo.toLowerCase();
+    if (!best[k] || g.taux > best[k].taux) best[k] = g;
+  });
+  const list = Object.values(best).sort((a, b) => b.taux - a.taux).slice(0, 10);
+  const ul = $('board');
+  ul.innerHTML = '';
+  if (!list.length) { ul.innerHTML = '<li class="empty">Aucune partie pour l\'instant. Sois le premier !</li>'; return; }
+  list.forEach((g, i) => {
+    const li = document.createElement('li');
+    const rk = document.createElement('span'); rk.className = 'rk'; rk.textContent = i + 1;
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = g.pseudo;
+    const tt = document.createElement('div'); tt.className = 'tt'; tt.textContent = g.titre + (g.abonnes ? ' · ' + g.abonnes : '');
+    nm.appendChild(tt);
+    const pc = document.createElement('span'); pc.className = 'pc'; pc.textContent = Math.round(g.taux) + ' %';
+    li.append(rk, nm, pc);
+    ul.appendChild(li);
+  });
+}
+
+function questionStat(i) {
+  if (!db) return '';
+  const res = allGames.map(g => g.answers[i]).filter(Boolean);
+  if (res.length < 2) return '📊 Presque personne n\'a encore eu cette question';
+  if (DEFIS.has(i)) {
+    const ok = res.filter(r => r === 'ok').length;
+    return '📊 ' + Math.round(ok / res.length * 100) + ' % des youtubeurs ont relevé ce défi';
+  }
+  const r = res.filter(x => x === 'r').length;
+  return '📊 ' + Math.round(r / res.length * 100) + ' % des youtubeurs y ont répondu';
+}
+
+// ---------- Partie ----------
+let pool = [], total = 0, n = 0, jokers = 3, utilises = 0, gagnes = 0, isDefi = false, curIdx = -1, curText = '';
+let answers = {}, texts = {}, player = {};
+
+function startGame() {
+  const pseudo = $('pseudo').value.trim();
+  if (!pseudo) { $('pseudo').focus(); $('pseudo').placeholder = 'Entre le nom de ta chaîne'; return; }
+  player = { pseudo, abonnes: $('abos').value };
+  const len = Number($('len').value);
+  const normales = QUESTIONS.map((_, i) => i).filter(i => !DEFIS.has(i)).sort(() => Math.random() - 0.5).slice(0, len - 2);
+  const defis = [...DEFIS].sort(() => Math.random() - 0.5).slice(0, 2);
+  pool = normales.concat(defis).sort(() => Math.random() - 0.5);
+  total = pool.length; n = 0; jokers = 3; utilises = 0; gagnes = 0; answers = {}; texts = {};
+  curIdx = -1;
+  show('s-game');
+  next(null);
+}
+
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id)); window.scrollTo(0, 0); }
+
+function stats() {
+  $('jk').textContent = '🃏 ' + jokers + ' joker' + (jokers > 1 ? 's' : '');
+  $('stats').textContent = player.pseudo + ' · ' + n + ' / ' + total;
+  $('pass').disabled = jokers === 0 || isDefi;
+  $('pass').textContent = isDefi ? 'Pas de joker sur un défi' : (jokers === 0 ? 'Pas de joker : réponds !' : 'Utiliser un joker (' + jokers + ')');
+}
+
+function pop(txt) { $('pop').textContent = txt; $('pop').classList.add('show'); setTimeout(() => $('pop').classList.remove('show'), 900); }
+
+// result = ce qui s'est passé sur la question en cours : 'r' répondu, 'p' joker, 'ok'/'ko' défi
+function next(result) {
+  if (curIdx >= 0 && result) { answers[curIdx] = result; texts[curIdx] = curText; }
+  if (!pool.length) { endGame(); return; }
+  n++;
+  curIdx = pool.pop();
+  curText = phrase(QUESTIONS[curIdx]);
+  isDefi = DEFIS.has(curIdx);
+  $('num').textContent = (isDefi ? 'Défi' : 'Question') + ' ' + n;
+  $('q').textContent = curText;
+  $('qstat').textContent = questionStat(curIdx);
+  $('reward').classList.toggle('show', isDefi);
+  $('done').classList.toggle('show', isDefi);
+  stats();
+}
+
+function onNext() { if (!$('s-game').classList.contains('on')) return; next(isDefi ? 'ko' : 'r'); }
+function joker() {
+  if (!$('s-game').classList.contains('on') || jokers === 0 || isDefi) return;
+  jokers--; utilises++; pop('JOKER UTILISÉ');
+  setTimeout(() => next('p'), 700);
+}
+function done() {
+  if (!$('s-game').classList.contains('on') || !isDefi) return;
+  isDefi = false; jokers++; gagnes++; pop('+1 JOKER 🃏');
+  $('done').classList.remove('show');
+  setTimeout(() => next('ok'), 900);
+}
+
+// ---------- Fin de partie ----------
+function titreFor(taux, defisOk) {
+  let t;
+  if (taux >= 100) t = 'Sans filtre total';
+  else if (taux >= 85) t = 'Le plus cash';
+  else if (taux >= 65) t = 'Honnête mais prudent';
+  else if (taux >= 45) t = 'Le diplomate';
+  else t = 'Le roi de l\'esquive';
+  return t;
+}
+
+let result = null;
+
+function endGame() {
+  const normal = Object.entries(answers).filter(([i]) => !DEFIS.has(Number(i)));
+  const rep = normal.filter(([, v]) => v === 'r').length;
+  const taux = normal.length ? Math.round(rep / normal.length * 100) : 0;
+  const defisOk = Object.values(answers).filter(v => v === 'ok').length;
+  const esquive = normal.find(([, v]) => v === 'p');
+  const titre = titreFor(taux, defisOk);
+  const others = allGames.filter(g => g.pseudo.toLowerCase() !== player.pseudo.toLowerCase());
+  const plusCash = others.length ? Math.round(others.filter(g => g.taux < taux).length / others.length * 100) : null;
+
+  result = {
+    pseudo: player.pseudo, abonnes: player.abonnes, titre, taux,
+    repondues: rep, normales: normal.length, defisOk, utilises,
+    esquive: esquive ? texts[esquive[0]] : null, plusCash
+  };
+
+  $('f-titre').textContent = titre;
+  $('f-taux').textContent = taux + ' %';
+  $('f-compare').textContent = plusCash === null ? 'Tu es le premier !' : 'Plus cash que ' + plusCash + ' % des youtubeurs';
+  show('s-end');
+  drawCard();
+  saveGame({ pseudo: player.pseudo, abonnes: player.abonnes, titre, taux, answers });
+}
+
+async function saveGame(game) {
+  const el = $('saved');
+  el.className = 'saved';
+  if (!db) { el.textContent = 'Partie non enregistrée (statistiques indisponibles).'; return; }
+  el.textContent = 'Enregistrement…';
+  try {
+    await fb.addDoc(fb.collection(db, 'parties'), {
+      pseudo: game.pseudo, abonnes: game.abonnes, titre: game.titre, taux: game.taux,
+      answers: game.answers, date: fb.serverTimestamp()
+    });
+    el.textContent = '✓ Partie enregistrée dans les stats';
+    el.className = 'saved ok';
+  } catch (e) {
+    el.textContent = 'Partie non enregistrée (erreur réseau).';
+  }
+}
+
+function wrap(ctx, text, maxW) {
+  const words = text.split(' '), lines = [];
+  let line = '';
+  words.forEach(w => {
+    const t = line ? line + ' ' + w : w;
+    if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t;
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+
+async function drawCard() {
+  try { await document.fonts.ready; } catch {}
+  const r = result, c = $('cv'), x = c.getContext('2d');
+  const W = 1080, H = 1920, M = 90;
+  x.fillStyle = '#120d12'; x.fillRect(0, 0, W, H);
+  // halo
+  const g = x.createRadialGradient(W / 2, 620, 50, W / 2, 620, 700);
+  g.addColorStop(0, 'rgba(255,61,110,.35)'); g.addColorStop(1, 'rgba(255,61,110,0)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.textAlign = 'center';
+  // logo
+  x.font = '72px "Archivo Black"';
+  x.fillStyle = '#f6eef4'; x.fillText('SANS', W / 2 - 150, 190);
+  x.fillStyle = '#ff3d6e'; x.fillText('FILTRE', W / 2 + 110, 190);
+  // pseudo
+  x.font = '800 54px Inter'; x.fillStyle = '#f6eef4';
+  x.fillText(r.pseudo, W / 2, 340);
+  x.font = '600 34px Inter'; x.fillStyle = '#a593a0';
+  x.fillText(r.abonnes + ' abonnés', W / 2, 395);
+  // pourcentage
+  x.font = '300px "Archivo Black"'; x.fillStyle = '#ff3d6e';
+  x.fillText(r.taux + '%', W / 2, 780);
+  x.font = '800 44px Inter'; x.fillStyle = '#f6eef4';
+  x.fillText('DE FRANCHISE', W / 2, 860);
+  // titre
+  x.fillStyle = '#ffd23d';
+  const tw = Math.min(W - 2 * M, (x.font = '76px "Archivo Black"', x.measureText(r.titre.toUpperCase()).width + 100));
+  x.beginPath(); x.roundRect((W - tw) / 2, 930, tw, 130, 30); x.fill();
+  x.fillStyle = '#1a1300'; x.fillText(r.titre.toUpperCase(), W / 2, 1022, W - 2 * M - 40);
+  // stats
+  const box = (bx, val, lab) => {
+    x.fillStyle = '#1d151d'; x.strokeStyle = '#33263a'; x.lineWidth = 3;
+    x.beginPath(); x.roundRect(bx, 1130, 280, 200, 28); x.fill(); x.stroke();
+    x.fillStyle = '#f6eef4'; x.font = '800 72px Inter'; x.fillText(val, bx + 140, 1230);
+    x.fillStyle = '#a593a0'; x.font = '600 30px Inter'; x.fillText(lab, bx + 140, 1290);
+  };
+  box(M, r.repondues + '/' + r.normales, 'répondues');
+  box(M + 310, String(r.utilises), 'jokers utilisés');
+  box(M + 620, r.defisOk + '/2', 'défis réussis');
+  // comparaison
+  x.font = '800 46px Inter'; x.fillStyle = '#f6eef4';
+  x.fillText(r.plusCash === null ? 'Premier youtubeur à passer le test !' : 'Plus cash que ' + r.plusCash + ' % des youtubeurs', W / 2, 1440, W - 2 * M);
+  // question esquivée
+  x.font = '600 32px Inter'; x.fillStyle = '#a593a0';
+  if (r.esquive) {
+    x.fillText('LA QUESTION ESQUIVÉE', W / 2, 1550);
+    x.font = '800 44px Inter'; x.fillStyle = '#f6eef4';
+    wrap(x, '« ' + r.esquive + ' »', W - 2 * M).slice(0, 2).forEach((l, i) => x.fillText(l, W / 2, 1620 + i * 58));
+  } else {
+    x.fillText('AUCUNE QUESTION ESQUIVÉE', W / 2, 1580);
+  }
+  // pied
+  x.font = '600 32px Inter'; x.fillStyle = '#a593a0';
+  x.fillText('Et toi, tu es à combien ? · ' + (location.host || 'Sans Filtre'), W / 2, 1840);
+}
+
+function download() {
+  $('cv').toBlob(async blob => {
+    const name = 'sans-filtre-' + result.pseudo.replace(/[^\w-]+/g, '-').toLowerCase() + '.png';
+    const file = new File([blob], name, { type: 'image/png' });
+    // Sur téléphone : menu de partage (TikTok, Insta, galerie…). Sur ordi : téléchargement.
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file], title: 'Mon résultat Sans Filtre' }); return; }
+      catch (e) { if (e && e.name === 'AbortError') return; }
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  }, 'image/png');
+}
+
+// ---------- Boutons ----------
+$('start').onclick = startGame;
+$('pseudo').addEventListener('keydown', e => { if (e.key === 'Enter') startGame(); });
+$('next').onclick = onNext;
+$('pass').onclick = joker;
+$('done').onclick = done;
+$('dl').onclick = download;
+$('again').onclick = () => { curIdx = -1; show('s-home'); };
+document.addEventListener('keydown', e => {
+  if (!$('s-game').classList.contains('on')) return;
+  if (e.code === 'Space') { e.preventDefault(); onNext(); }
+  else if (e.key === 'j' || e.key === 'J') joker();
+  else if (e.key === 'd' || e.key === 'D') done();
+});
+
+initDb();
+</script>
+</body>
+</html>
